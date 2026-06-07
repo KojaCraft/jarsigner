@@ -17,7 +17,7 @@ name = "jarsigned"
 path = "src/main.rs"
 
 [dependencies]
-jarsigner = { path = "../jarsigner" }
+jarsigner = { path = "../jarsigner", version = "0.2.0" }
 clap = { version = "4.5", features = ["derive"] }
 keyring = "2.3"
 dirs = "5.0"
