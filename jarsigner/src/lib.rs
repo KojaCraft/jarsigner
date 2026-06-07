@@ -57,7 +57,14 @@ pub fn sign_bytes(
     _pass: &str,
     override_signature: bool,
 ) -> Result<Vec<u8>> {
-    sign_bytes_with_cert_chain(jar_bytes, key_bytes, None, _pass, override_signature, &mut |_, _| {})
+    sign_bytes_with_cert_chain(
+        jar_bytes,
+        key_bytes,
+        None,
+        _pass,
+        override_signature,
+        &mut |_, _| {},
+    )
 }
 
 /// Signs JAR bytes with the provided RSA private key and optional certificate chain.

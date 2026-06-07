@@ -37,7 +37,8 @@ enum Commands {
 }
 
 fn get_keys_dir() -> Result<PathBuf> {
-    let mut dir = dirs::home_dir().ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
+    let mut dir =
+        dirs::home_dir().ok_or_else(|| anyhow::anyhow!("Could not find home directory"))?;
     dir.push(".jarsigned");
     std::fs::create_dir_all(&dir)?;
     Ok(dir)
@@ -65,11 +66,14 @@ fn main() -> Result<()> {
             let pub_key_path = keys_dir.join(format!("{}.pub", name));
 
             if priv_key_path.exists() || pub_key_path.exists() {
-                anyhow::bail!("Key '{}' already exists. Use delete command first or choose a different name.", name);
+                anyhow::bail!(
+                    "Key '{}' already exists. Use delete command first or choose a different name.",
+                    name
+                );
             }
 
             let pb = spinner("Generating RSA key pair…");
-            
+
             let passcode = if let Some(p) = passcode {
                 p
             } else {
@@ -90,34 +94,47 @@ fn main() -> Result<()> {
 
             println!("{} Key generated successfully", "✓".green().bold());
             println!("  Name:        {}", name.cyan());
-            println!("  Private key: {}", priv_key_path.display().to_string().dimmed());
-            println!("  Public key:  {}", pub_key_path.display().to_string().dimmed());
+            println!(
+                "  Private key: {}",
+                priv_key_path.display().to_string().dimmed()
+            );
+            println!(
+                "  Public key:  {}",
+                pub_key_path.display().to_string().dimmed()
+            );
         }
         Commands::Sign { jar, key, output } => {
             let keys_dir = get_keys_dir()?;
             let key_name = key.unwrap_or_else(|| "default".to_string());
             let priv_key_path = keys_dir.join(format!("{}.priv", key_name));
-            
+
             if !priv_key_path.exists() {
                 anyhow::bail!("Key '{}' not found. Use generate command first or specify a different key with --key.", key_name);
             }
-            
+
             let private_key = std::fs::read(&priv_key_path)?;
 
             let jar_bytes = std::fs::read(&jar)?;
-            
+
             let pb = spinner("Signing JAR file…");
             let mut file_count = 0;
-            
-            let signed_jar = jarsigner::sign_bytes_with_cert_chain(&jar_bytes, &private_key, None, "", true, |_name, done| {
-                if done {
-                    file_count += 1;
-                    pb.set_message(format!("Signed {} files…", file_count));
-                }
-            })?;
+
+            let signed_jar = jarsigner::sign_bytes_with_cert_chain(
+                &jar_bytes,
+                &private_key,
+                None,
+                "",
+                true,
+                |_name, done| {
+                    if done {
+                        file_count += 1;
+                        pb.set_message(format!("Signed {} files…", file_count));
+                    }
+                },
+            )?;
 
             pb.finish_and_clear();
-            
+
             let output_path = output.unwrap_or(jar);
             std::fs::write(&output_path, signed_jar)?;
 
@@ -137,7 +154,7 @@ fn main() -> Result<()> {
             }
 
             pb.set_message("Verifying signature…");
-            
+
             let keys_dir = get_keys_dir()?;
             let entries = std::fs::read_dir(&keys_dir)?;
             let mut found_valid = false;
@@ -149,7 +166,8 @@ fn main() -> Result<()> {
                     let public_key = std::fs::read(&path)?;
                     if let Ok(is_valid) = jarsigner::verify(&jar_bytes, &public_key) {
                         if is_valid {
-                            let key_name = path.file_stem()
+                            let key_name = path
+                                .file_stem()
                                 .and_then(|s| s.to_str())
                                 .unwrap_or("unknown");
                             pb.finish_and_clear();
@@ -170,7 +188,7 @@ fn main() -> Result<()> {
         }
         Commands::Delete { name } => {
             let pb = spinner("Deleting key…");
-            
+
             let keys_dir = get_keys_dir()?;
             let priv_key_path = keys_dir.join(format!("{}.priv", name));
             let pub_key_path = keys_dir.join(format!("{}.pub", name));

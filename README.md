@@ -1,8 +1,6 @@
-# jarsigned
+# jarsigner
 
 A Rust library and CLI tool for signing JAR files, compatible with the Java `jarsigner` tool API.
-
-**Note:** The library crate is named `jarsigner` on crates.io.
 
 ## Features
 
@@ -91,7 +89,7 @@ The directory stores:
 #### Basic JAR Signing
 
 ```rust
-use jarsigned::{sign_bytes, generate_key_pair};
+use jarsigner::{sign_bytes, generate_key_pair};
 
 // Generate a key pair
 let (private_key, public_key) = generate_key_pair()?;
@@ -106,7 +104,7 @@ std::fs::write("my-app-signed.jar", signed_jar)?;
 #### Checking if a JAR is Signed
 
 ```rust
-use jarsigned::is_signed;
+use jarsigner::is_signed;
 
 let jar_bytes = std::fs::read("my-app.jar")?;
 let signed = is_signed(&jar_bytes)?;
@@ -115,7 +113,7 @@ let signed = is_signed(&jar_bytes)?;
 #### Verifying a Signature
 
 ```rust
-use jarsigned::verify;
+use jarsigner::verify;
 
 let jar_bytes = std::fs::read("my-app.jar")?;
 let public_key = std::fs::read("public_key.der")?;
@@ -125,7 +123,7 @@ let valid = verify(&jar_bytes, &public_key)?;
 #### Extracting Signature Block
 
 ```rust
-use jarsigned::extract_signature_bytes;
+use jarsigner::extract_signature_bytes;
 
 let jar_bytes = std::fs::read("my-app.jar")?;
 if let Some(sig_block) = extract_signature_bytes(&jar_bytes)? {
@@ -154,7 +152,7 @@ The library follows the standard jarsigner format:
 
 ## License
 
-MIT OR Apache-2.0
+MIT
 
 ## Contributing
 
