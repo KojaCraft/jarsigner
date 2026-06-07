@@ -52,7 +52,7 @@ jobs:
         run: cargo clippy --workspace --all-features -- -D warnings
 
       - name: Check formatting
-        run: cargo fmt --workspace -- --check
+        run: cargo fmt --all -- --check
 
   docs:
     name: Build Documentation
