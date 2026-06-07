@@ -1,0 +1,28 @@
+[package]
+name = "jarsigned-cli"
+version = "0.1.0"
+edition = "2021"
+description = "CLI for JAR signing"
+authors = ["Kojacoord"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/kojacoord/jarsigned"
+homepage = "https://github.com/kojacoord/jarsigned"
+readme = "../README.md"
+keywords = ["jar", "signing", "jarsigner", "cli"]
+categories = ["command-line-utilities", "cryptography"]
+rust-version = "1.70"
+
+[[bin]]
+name = "jarsigned"
+path = "src/main.rs"
+
+[dependencies]
+jarsigner = { path = "../jarsigner" }
+clap = { version = "4.5", features = ["derive"] }
+keyring = "2.3"
+dirs = "5.0"
+indicatif = "0.17"
+colored = "2.1"
+anyhow = { workspace = true }
+hex = { workspace = true }
+rand = { workspace = true }
