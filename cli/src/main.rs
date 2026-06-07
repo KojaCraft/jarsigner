@@ -162,7 +162,7 @@ fn main() -> Result<()> {
             for entry in entries {
                 let entry = entry?;
                 let path = entry.path();
-                if path.extension().map_or(false, |e| e == "pub") {
+                if path.extension().is_some_and(|e| e == "pub") {
                     let public_key = std::fs::read(&path)?;
                     if let Ok(is_valid) = jarsigner::verify(&jar_bytes, &public_key) {
                         if is_valid {

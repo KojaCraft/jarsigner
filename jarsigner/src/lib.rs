@@ -45,7 +45,7 @@ use zip::ZipArchive;
 /// # Example
 ///
 /// ```no_run
-/// use jarsigned::{sign_bytes, generate_key_pair};
+/// use jarsigner::{sign_bytes, generate_key_pair};
 ///
 /// let (private_key, _) = generate_key_pair().unwrap();
 /// let jar_bytes = std::fs::read("app.jar").unwrap();
@@ -327,7 +327,7 @@ pub fn extract_signature_bytes(signed_jar_bytes: &[u8]) -> Result<Option<Vec<u8>
 /// # Example
 ///
 /// ```no_run
-/// use jarsigned::generate_key_pair;
+/// use jarsigner::generate_key_pair;
 ///
 /// let (private_key, public_key) = generate_key_pair().unwrap();
 /// ```
@@ -390,7 +390,7 @@ pub fn generate_signing_credentials() -> Result<(Vec<u8>, Vec<u8>)> {
 /// # Example
 ///
 /// ```no_run
-/// use jarsigned::is_signed;
+/// use jarsigner::is_signed;
 ///
 /// let jar_bytes = std::fs::read("app.jar").unwrap();
 /// let signed = is_signed(&jar_bytes).unwrap();
@@ -600,9 +600,15 @@ mod tests {
         let (priv_key, _) = generate_signing_credentials().unwrap();
         let cert_chain: Vec<Vec<u8>> = vec![];
 
-        let signed_jar =
-            sign_bytes_with_cert_chain(&jar_bytes, &priv_key, Some(&cert_chain), "", false, &mut |_, _| {})
-                .unwrap();
+        let signed_jar = sign_bytes_with_cert_chain(
+            &jar_bytes,
+            &priv_key,
+            Some(&cert_chain),
+            "",
+            false,
+            &mut |_, _| {},
+        )
+        .unwrap();
 
         assert!(!signed_jar.is_empty());
         assert!(signed_jar.len() > jar_bytes.len());
@@ -662,9 +668,15 @@ mod tests {
         let (priv_key, _) = generate_signing_credentials().unwrap();
         let cert_chain: Vec<Vec<u8>> = vec![];
 
-        let signed_jar =
-            sign_bytes_with_cert_chain(&jar_bytes, &priv_key, Some(&cert_chain), "", false, &mut |_, _| {})
-                .unwrap();
+        let signed_jar = sign_bytes_with_cert_chain(
+            &jar_bytes,
+            &priv_key,
+            Some(&cert_chain),
+            "",
+            false,
+            &mut |_, _| {},
+        )
+        .unwrap();
 
         let result = extract_public_key(&signed_jar);
         assert!(result.is_ok());
