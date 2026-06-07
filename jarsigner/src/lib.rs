@@ -601,7 +601,7 @@ mod tests {
         let cert_chain: Vec<Vec<u8>> = vec![];
 
         let signed_jar =
-            sign_bytes_with_cert_chain(&jar_bytes, &priv_key, Some(&cert_chain), "", false)
+            sign_bytes_with_cert_chain(&jar_bytes, &priv_key, Some(&cert_chain), "", false, &mut |_, _| {})
                 .unwrap();
 
         assert!(!signed_jar.is_empty());
@@ -663,7 +663,7 @@ mod tests {
         let cert_chain: Vec<Vec<u8>> = vec![];
 
         let signed_jar =
-            sign_bytes_with_cert_chain(&jar_bytes, &priv_key, Some(&cert_chain), "", false)
+            sign_bytes_with_cert_chain(&jar_bytes, &priv_key, Some(&cert_chain), "", false, &mut |_, _| {})
                 .unwrap();
 
         let result = extract_public_key(&signed_jar);
